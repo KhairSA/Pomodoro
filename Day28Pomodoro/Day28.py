@@ -76,7 +76,7 @@ title_label.grid(column=1, row=0)
 
 #picture
 canvas = Canvas(width=300, height=300, bg=YELLOW, highlightthickness=0)
-tomoto_img = ImageTk.PhotoImage(Image.open(r"C:\Users\torre\OneDrive\Desktop\PythonCode\PythonLearning\Day28Pomodoro\red.jpg"))
+tomoto_img = ImageTk.PhotoImage(Image.open(r"red.jpg"))
 canvas.create_image(150, 150, image= tomoto_img)
 timer_text = canvas.create_text(150, 150, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
 canvas.grid(column=1, row=1)
