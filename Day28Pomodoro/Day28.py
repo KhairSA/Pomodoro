@@ -1,6 +1,7 @@
 from tkinter import *
 from PIL import ImageTk, Image
-import time, math
+import time, math, pandas
+from datetime import date
 
 PINK = "#e2979c"
 RED = "#e7305b"
@@ -13,10 +14,12 @@ LONG_BREAK_MIN = 20
 reps = 0
 timer = True
 check = ""
+filepath = 'Pomodorodata.csv'
+today = date.today()
 
-#function to start timer
+#function to start timer and save project name once completed
 def start_timer():
-    global reps, timer, check
+    global reps, timer, check, filepath, today
     reps += 1
     window.attributes("-topmost", 1)
     window.bell()
@@ -25,6 +28,9 @@ def start_timer():
         start_button.config(text="In Progress", state="disabled")
     print(reps)
     if reps == 8:
+        x = pandas.read_csv(filepath)
+        x.loc[len(x)] = [input.get(), today]
+        x.to_csv(filepath, index=False)
         reset_timer()
     elif reps == 7:
         count_down(LONG_BREAK_MIN*60)
@@ -36,7 +42,7 @@ def start_timer():
         count_down(SHORT_BREAK_MIN*60)
         title_label.config(text="Short Break", fg= RED)
 
-
+#Function to reset the process
 def reset_timer():
     global reps, timer, check
     window.after_cancel(timer)
@@ -64,39 +70,41 @@ def count_down(count):
         check_mark.config(text=check)
         check = ""
 
-#window code plus title
+#window code plus titles
 window = Tk()
 window.title("Pomodoro")
 window.config(padx= 75, pady= 75, bg=YELLOW)
 
-
 title_label = Label(text="Timer", fg=GREEN, bg=YELLOW, font=(FONT_NAME, 45, "bold"))
 title_label.grid(column=1, row=0)
 
-
-#picture
+##picture
 canvas = Canvas(width=300, height=300, bg=YELLOW, highlightthickness=0)
 tomoto_img = ImageTk.PhotoImage(Image.open(r"red.jpg"))
 canvas.create_image(150, 150, image= tomoto_img)
 timer_text = canvas.create_text(150, 150, text="00:00", fill="white", font=(FONT_NAME, 35, "bold"))
-canvas.grid(column=1, row=1)
+canvas.grid(column=1, row=2, padx=20, pady=20)
 
-#start and reset button
+##start and reset button
 start_button = Button(text="Start", command=start_timer, highlightthickness=0, font=(FONT_NAME, 12), bg="white")
-start_button.grid(column=0, row=2)
+start_button.grid(column=0, row=3)
 
 reset_button = Button(text="Reset", command=reset_timer, highlightthickness=0, font=(FONT_NAME, 12), bg="white")
-reset_button.grid(column=2, row=2)
+reset_button.grid(column=2, row=3)
 
-#add checkmarks
+##add checkmarks
 check_mark = Label(text="", font=(FONT_NAME, 16, "bold"), bg=YELLOW, fg=GREEN)
-check_mark.grid(column=1, row=3)
+check_mark.grid(column=1, row=4)
+
+##project name
+input = Entry(width = 40)
+input.insert(END, "Enter Project/Studying Name")
+input.grid(column=1,row=1)
 
 
 
 
 
 
-
-
+#keeps window up
 window.mainloop()
